@@ -25,16 +25,5 @@ api.add_resource(BookPUTResource, '/books/<int:id>')
 api.add_resource(BookDELETEResource, '/books/<int:id>')
 
 if __name__ == '__main__':
-    # app.run(debug=False)
-    app.run(host='0.0.0.0', debug=False, port=80)
-
-# from flask import Flask
-# app = Flask(__name__)
-
-# @app.route("/")
-# def hello():
-#     return "Hello Salman Majidi"
-
-# if __name__ == "__main__":
-#     # Only for debugging while developing
-#     app.run(host='0.0.0.0', debug=True, port=80)
+    app.run(debug=False)
+    # app.run(host='0.0.0.0', debug=False, port=80)
