@@ -1,6 +1,5 @@
 import dotenv
 import os
-import re
 import json
 
 
