@@ -40,3 +40,4 @@ class BookDELETEResource(Resource):
     def delete(self, id):
         global books
         books = [book for book in books if book["id"] != id]
+        return "", 204
