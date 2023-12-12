@@ -7,10 +7,10 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5000"
+      "url": "http://localhost:5010"
     },
     {
-      "url": "http://100.26.240.4:5000"
+      "url": "http://localhost:5010"
     }
   ],
   "tags": [

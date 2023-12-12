@@ -1,17 +1,16 @@
 from flask import Flask, jsonify, redirect
 from flask_restful import Api, MethodNotAllowed, NotFound
 from flask_cors import CORS
-from util.common import prefix, secret, build_swagger_config_json
+from util.common import domain, port, prefix, build_swagger_config_json
+from resources.swaggerConfig import SwaggerConfig
 from resources.bookResource import BooksGETResource, BookGETResource, BookPOSTResource, BookPUTResource, BookDELETEResource
 from flask_swagger_ui import get_swaggerui_blueprint
-from flask_jwt_extended.exceptions import NoAuthorizationError
 
 # ============================================
 # Main
 # ============================================
 application = Flask(__name__)
 app = application
-app.config["JWT_SECRET_KEY"] = secret
 app.config['PROPAGATE_EXCEPTIONS'] = True
 CORS(app)
 api = Api(app, prefix=prefix, catch_all_404s=True)
@@ -22,7 +21,7 @@ api = Api(app, prefix=prefix, catch_all_404s=True)
 build_swagger_config_json()
 swaggerui_blueprint = get_swaggerui_blueprint(
     prefix,
-    '/static/swagger/config.json',
+    f'http://{domain}:{port}{prefix}/swagger-config',
     config={
         'app_name': "Flask API",
         "layout": "BaseLayout",
@@ -34,13 +33,6 @@ app.register_blueprint(swaggerui_blueprint)
 # ============================================
 # Error Handler
 # ============================================
-
-
-@app.errorhandler(NoAuthorizationError)
-def handle_no_auth_error(e):
-    response = jsonify({"message": str(e)})
-    response.status_code = 401
-    return response
 
 
 @app.errorhandler(NotFound)
@@ -58,7 +50,7 @@ def handle_method_not_allowed_error(e):
 
 
 @app.route('/')
-def redirect_to_python_agm():
+def redirect_to_prefix():
     if prefix != '':
         return redirect(prefix)
 
@@ -66,6 +58,8 @@ def redirect_to_python_agm():
 # ============================================
 # Add Resource
 # ============================================
+# GET swagger config
+api.add_resource(SwaggerConfig, '/swagger-config')
 # GET books
 api.add_resource(BooksGETResource, '/books')
 api.add_resource(BookGETResource, '/books/<int:id>')
@@ -77,5 +71,4 @@ api.add_resource(BookPUTResource, '/books/<int:id>')
 api.add_resource(BookDELETEResource, '/books/<int:id>')
 
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', debug=False, port=5000)
     app.run(debug=True)
