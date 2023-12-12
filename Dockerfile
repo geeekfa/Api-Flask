@@ -1,39 +1,21 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.11
-COPY application.py requirements.txt /app/
-COPY resources/ /app/resources/
-RUN mv application.py main.py
-RUN pip install --no-cache-dir -r requirements.txt
-EXPOSE 80
+# Use the official Python 3.8 slim image as the base image
+FROM python:3.8-slim
 
+# Set the working directory within the container
+WORKDIR /api-flask
 
-# sudo docker build -t python_flask_restful_docker_image .
-# sudo docker run --rm -it -p 80:80 --name python_flask_restful_docker_container python_flask_restful_docker_image
-# sudo docker run --rm -d  -p 80:80 --name python_flask_restful_docker_container python_flask_restful_docker_image
-# docker exec -it python_flask_restful_docker_container sh
+# Copy the necessary files and directories into the container
+COPY resources/ static/ util/ .env application.py requirements.txt /api-flask/
+COPY resources/ /api-flask/resources/
+COPY static/ /api-flask/static/
+COPY util/ /api-flask/util/
+COPY .env application.py requirements.txt  /api-flask/
 
-# docker images
-# docker rmi <IMAGE>
-# docker rm <CONTAINER>
-# docker container prune
+# Upgrade pip and install Python dependencies
+RUN pip3 install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# docker ps -a
+# Expose port 5000 for the Flask application
+EXPOSE 5000
 
-# docker save -o python_flask_restful_docker_image.tar python_flask_restful_docker_image
-# docker load -i python_flask_restful_docker_image.tar
-
-
-# create an EC2 linux 2 instance on AWS
-# ssh -i .ssh/agmsulutions.pem ec2-user@ec2-54-167-40-40.compute-1.amazonaws.com
-# sudo yum update -y
-# sudo amazon-linux-extras install docker
-# sudo service docker start
-# mkdir downloads
-# cd downloads
-
-# in python app terminal 
-# scp -i /Users/salmanmajidi/.ssh/agmsulutions.pem -r Dockerfile application.py requirements.txt resources ec2-user@ec2-54-167-40-40.compute-1.amazonaws.com:/home/ec2-user/downloads
-
-
-# sudo certbot -n -d ec2-54-167-40-40.compute-1.amazonaws.com --nginx --agree-tos --email geeekfa@gmail.com
-
-
+# Define the command to run the Flask application using Gunicorn
+CMD ["gunicorn", "application:app", "-b", "0.0.0.0:5000", "-w", "4"]

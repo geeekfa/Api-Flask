@@ -480,6 +480,172 @@ Set up your Flask app to seamlessly integrating Swagger for documentation and AP
     ```shell
     pip3 install -r requirements.txt
     ```
+
+[<img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg" alt="Github" height="30"/> https://github.com/geeekfa/Api-Flask ](https://github.com/geeekfa/Api-Flask)
 ---
 # Dockerizing a Python Flask App: A Step-by-Step Guide to Containerizing Your Web Application"
 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python" height="50"/> <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Flask_logo.svg" alt="Flask" height="50"/> <img src="https://upload.wikimedia.org/wikipedia/en/f/f4/Docker_logo.svg" alt="Docker" height="50"/>
+
+Discover the essentials of containerizing your Python Flask app with Docker. This guide covers creating Dockerfiles, optimizing builds, and using Docker Compose for deployment. Follow step-by-step instructions to encapsulate your app, manage dependencies, and ensure consistency. Whether you're new to Docker or enhancing your skills, unlock containerization's power and elevate your development workflow.
+
+---
+
+1.  Install Docker
+    - Refer to this like [https://www.docker.com/get-started/](https://www.docker.com/get-started/) to install Docker on your machine.
+2.  Create a Python Flask project
+    
+    To create a Python Flask, refer to the medium.com article or clone the prepared project from the Github repository.
+
+    - [Building a RESTful API with Python Flask and Swagger: A Comprehensive Guide](https://medium.com/@geeekfa/building-a-restful-api-with-python-flask-and-swagger-a-comprehensive-guide-e9c9c92853e6)
+    - [Github Repository](https://github.com/geeekfa/Api-Flask)
+  
+3. Create `Dockerfile` in the root of the project.
+   ```Makefile
+    # Use the official Python 3.8 slim image as the base image
+    FROM python:3.8-slim
+
+    # Set the working directory within the container
+    WORKDIR /api-flask
+
+    # Copy the necessary files and directories into the container
+    COPY resources/ static/ util/ .env application.py requirements.txt /api-flask/
+    COPY resources/ /api-flask/resources/
+    COPY static/ /api-flask/static/
+    COPY util/ /api-flask/util/
+    COPY .env application.py requirements.txt  /api-flask/
+
+    # Upgrade pip and install Python dependencies
+    RUN pip3 install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+    # Expose port 5000 for the Flask application
+    EXPOSE 5000
+
+    # Define the command to run the Flask application using Gunicorn
+    CMD ["gunicorn", "application:app", "-b", "0.0.0.0:5000", "-w", "4"]
+   ```
+
+4. Build a `Docker Image`
+   ```bash
+   sudo docker build -t api-flask .
+   ```
+   If you run the following command, you will see the created `Docker Image`.
+   ```bash
+   docker images
+   ```
+   ```
+    REPOSITORY                   TAG               IMAGE ID       CREATED          SIZE
+    api-flask                    latest            161bac35dd39   11 seconds ago   183MB
+   ```
+   *Some values may be different.*
+
+5. Create a `Volume` directory
+   - Create a folder in your machine. (*e.g. ~/Documents/temp/api-flask*)
+   - Create `.env` file and add the following content to it.
+        ```
+        DOMAIN=localhost
+        PORT=8080
+        PREFIX=
+        ```
+6. Start a `Docker container`
+   - Open a terminal in the created folder and run the following command.
+     * `--rm`: Automatically remove the container when it exits.
+     * `--it`: Allocate a pseudo-TTY and keep STDIN open, allowing you to interact with the container.
+     * `-p 8080:5000`: Publish container's port 5000 to the host machine's port 8080.
+     * `--name api-flask-container`: Assign a name to the running container.
+     * `api-flask`: The name of the Docker image to be used for creating the container.
+   ```bash
+   sudo docker run --rm -it -p 8080:5000 -v ./.env:/api-flask/.env --name api-flask-container api-flask
+   ```
+   - As you see, the container is running and `gunicorn` is listening at `http://0.0.0.0:5000`
+    ```bash
+    [2023-12-12 06:40:07 +0000] [1] [INFO] Starting gunicorn 21.2.0
+    [2023-12-12 06:40:07 +0000] [1] [INFO] Listening at: http://0.0.0.0:5000 (1)
+    [2023-12-12 06:40:07 +0000] [1] [INFO] Using worker: sync
+    [2023-12-12 06:40:07 +0000] [8] [INFO] Booting worker with pid: 8
+    [2023-12-12 06:40:07 +0000] [9] [INFO] Booting worker with pid: 9
+    [2023-12-12 06:40:07 +0000] [10] [INFO] Booting worker with pid: 10
+    [2023-12-12 06:40:07 +0000] [11] [INFO] Booting worker with pid: 11
+    ```
+
+7. Open your browser and navigate to http://localhost:8080. You should see the Swagger page and be able to interact with the APIs.
+   
+8. Open a new terminal and run the following command, you will see the created `Docker Container`.
+   ```bash
+    docker ps
+   ```
+   ```
+    CONTAINER ID   IMAGE                             COMMAND                  CREATED              STATUS              PORTS                    NAMES
+    4d355b2637dd   api-flask                         "gunicorn applicatio…"   About a minute ago   Up About a minute   0.0.0.0:8080->5000/tcp   api-flask-container
+   ```
+   *Some values may be different.*
+
+   ---
+
+   ## Tips
+   1. If you close the running terminal, the container doesn't run anymore. To run the container in detached mode, use `-d`.
+        ```bash
+        sudo docker run --rm -d -it -p 8080:5000 -v ./.env:/api-flask/.env --name api-flask-container api-flask
+        ```
+   2. To interact with the container:
+        ```bash
+        docker exec -it api-flask-container sh
+        ``` 
+        Now you can run the commands inside the container. For example, by running the following command, you will be informed about the Linux release.
+        ```bash
+        cat /etc/os-release
+        ```
+        ```bash
+        PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+        NAME="Debian GNU/Linux"
+        VERSION_ID="12"
+        VERSION="12 (bookworm)"
+        VERSION_CODENAME=bookworm
+        ID=debian
+        HOME_URL="https://www.debian.org/"
+        SUPPORT_URL="https://www.debian.org/support"
+        BUG_REPORT_URL="https://bugs.debian.org/"
+        ```
+   
+    3. To remove a Docker image:
+        ```bash
+        docker rmi <image_name_or_id>
+        ```
+    4. To remove all the Docker images:
+        ```bash
+        sudo docker rmi $(docker images -q)
+        ```
+    5. To stop a Docker container:
+        ```bash
+        docker stop <container_name_or_id>
+        ```
+    6. To remove a Docker container:
+        ```bash
+        docker rm <container_name_or_id>
+        ```
+    7. To remove all the stopped Docker containers:
+        ```bash
+        docker container prune
+        ```
+    8. To remove all the Docker containers:
+        ```bash
+        sudo docker rm $(docker ps -a -q)
+        ```
+    9. To save a Docker image in your machine:
+        ```bash
+        docker save -o api-flask.tar api-flask
+        ```
+    10. To load a Docker image:
+        ```bash
+        docker load -i api-flask.tar
+        ```
+    11. To push a Docker image to the Docker Hub:
+        ```bash
+        docker login
+
+        # amd64
+        docker buildx build --platform linux/amd64 -t <your_docker_hub_username>/api-flask:latest-amd64 --push .
+        
+        # arm64
+        docker buildx build --platform linux/arm64 -t <your_docker_hub_username>/api-flask:latest-arm64 --push .
+        ```
+
