@@ -1,6 +1,7 @@
 # Building a RESTful API with Python Flask and Swagger: A Comprehensive Guide
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python" height="50"/> <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Flask_logo.svg" alt="Flask" height="50"/> <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Swagger-logo.png" alt="Swagger" height="50"/>
 
-Discover the ins and outs of creating a robust RESTful API using Python Flask and Swagger in this in-depth article. From setting up your Flask app to seamlessly integrating Swagger for documentation and API testing, this guide provides a step-by-step walkthrough. Learn best practices for structuring your API, documenting endpoints with Swagger annotations, and leveraging the power of Flask to create a scalable and maintainable application. Whether you're a seasoned developer or just getting started with APIs, this article will equip you with the knowledge to build, document, and run APIs with confidence using Flask and Swagger.
+Set up your Flask app to seamlessly integrating Swagger for documentation and API testing, this guide provides a step-by-step walkthrough. Learn best practices for structuring your API, documenting endpoints with Swagger annotations, and leveraging the power of Flask to create a scalable and maintainable application. Whether you're a seasoned developer or just getting started with APIs, this article will equip you with the knowledge to build, document, and run APIs with confidence using Flask and Swagger.
 
 ---
 
@@ -455,12 +456,15 @@ Discover the ins and outs of creating a robust RESTful API using Python Flask an
 11. Run
 
 - `Visual Studio Code:` run the application in Visual Studio Code, you can click the Run button and select the `Python: Run` launch configuration.
-- `gunicorn:`
+  
+  OR
+
+- `gunicorn:` run the application by using the following command in the terminal.
     ```shell
     gunicorn application:app -b 0.0.0.0:5000
     ```
 
-12. Open your browser and navigate to http://localhost:5000. You should see the Swagger page and be able to interact with the APIs.
+12.  Open your browser and navigate to http://localhost:5000. You should see the Swagger page and be able to interact with the APIs.
 
 
 13. Deploy
@@ -476,3 +480,6 @@ Discover the ins and outs of creating a robust RESTful API using Python Flask an
     ```shell
     pip3 install -r requirements.txt
     ```
+---
+# Dockerizing a Python Flask App: A Step-by-Step Guide to Containerizing Your Web Application"
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python" height="50"/> <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Flask_logo.svg" alt="Flask" height="50"/> <img src="https://upload.wikimedia.org/wikipedia/en/f/f4/Docker_logo.svg" alt="Docker" height="50"/>
