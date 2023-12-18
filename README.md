@@ -483,7 +483,7 @@ Set up your Flask app to seamlessly integrating Swagger for documentation and AP
 
 [<img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg" alt="Github" height="30"/> https://github.com/geeekfa/Api-Flask ](https://github.com/geeekfa/Api-Flask)
 ---
-# Dockerizing a Python Flask App: A Step-by-Step Guide to Containerizing Your Web Application"
+# Dockerizing a Python Flask App: A Step-by-Step Guide to Containerizing Your Web Application
 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python" height="50"/> <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Flask_logo.svg" alt="Flask" height="50"/> <img src="https://upload.wikimedia.org/wikipedia/en/f/f4/Docker_logo.svg" alt="Docker" height="50"/>
 
 Discover the essentials of containerizing your Python Flask app with Docker. This guide covers creating Dockerfiles, optimizing builds, and using Docker Compose for deployment. Follow step-by-step instructions to encapsulate your app, manage dependencies, and ensure consistency. Whether you're new to Docker or enhancing your skills, unlock containerization's power and elevate your development workflow.
